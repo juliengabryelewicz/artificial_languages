@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Like, Repository } from 'typeorm';
+import { Like, QueryRunnerAlreadyReleasedError, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WordEntity } from './word.entity';
 import { SearchQueryDto } from './dto/dto.searchquery';
@@ -70,12 +70,15 @@ export class WordService {
         return await this.wordRepository.find({
             where:[
                 { name: Like(`%${query.query}%`),
-                  definitions: {
+                    language: {
+                        code: query.lang
+                    },
+                    definitions: {
                     pos: {
                         code: query.pos
                     },
                     translation: {
-                        code: query.lang
+                        code: query.translation
                     }
                   }
                 },
@@ -86,8 +89,11 @@ export class WordService {
                             code: query.pos
                         },
                         translation: {
-                            code: query.lang
+                            code: query.translation
                         }
+                    },
+                    language: {
+                        code: query.lang
                     }
                 },
             ],

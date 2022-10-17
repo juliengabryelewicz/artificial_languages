@@ -21,6 +21,11 @@ export class SearchQueryDto {
   public lang: string;
 
   @ApiProperty()
+  @Transform(({ value }) => toLowerCase(value))
+  @IsOptional()
+  public translation: string;
+
+  @ApiProperty()
   @Transform(({ value }) => parseInt(value))
   @IsOptional()
   @IsNumber()
